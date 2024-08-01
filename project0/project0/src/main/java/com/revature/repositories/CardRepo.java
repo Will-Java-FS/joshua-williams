@@ -1,11 +1,11 @@
 package com.revature.repositories;
 
-import com.revature.models.Pokemon;
+import com.revature.models.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PokemonRepo extends JpaRepository<Pokemon, Long> {
-    List<Pokemon> findByName(String name);
+public interface CardRepo extends JpaRepository<Card, Long> {
+    List<Card> findByName(String name);
 }
