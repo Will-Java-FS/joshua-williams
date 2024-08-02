@@ -19,7 +19,9 @@ public class CardService {
 
     public Optional<Card> deleteCard(long id) {
         Optional<Card> card = cardRepo.findById(id);
-        cardRepo.deleteById(id);
+        if (card.isPresent()) {
+            cardRepo.deleteById(id);
+        }
         return card;
     }
 }
