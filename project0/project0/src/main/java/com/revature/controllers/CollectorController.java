@@ -43,15 +43,15 @@ public class CollectorController {
 
     //    - As a user, I can create an account to hold my Items
     @PostMapping(value = "collector")
-    public ResponseEntity<Collector> createCollector(@RequestBody Collector newCollector) {
+    public ResponseEntity<?> createCollector(@RequestBody Collector newCollector) {
         if (newCollector.getUsername().isEmpty() || Objects.equals(newCollector.getUsername(), "") || newCollector.getPassword().length() < 4) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Invalid Username or Password", HttpStatus.BAD_REQUEST);
         }
         try {
             Collector collector = collectorService.register(newCollector);
             return new ResponseEntity<>(collector, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Username already exists.", HttpStatus.BAD_REQUEST);
         }
     }
 
