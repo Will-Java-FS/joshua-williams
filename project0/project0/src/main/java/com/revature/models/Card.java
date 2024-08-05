@@ -78,7 +78,7 @@ public class Card
         this.collector = collector;
     }
 
-    public int getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
@@ -102,7 +102,7 @@ public class Card
         this.type = type;
     }
 
-    public int getHealth() {
+    public Integer getHealth() {
         return health;
     }
 
