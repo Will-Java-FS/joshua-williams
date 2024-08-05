@@ -1,8 +1,9 @@
 package com.revature.controllers;
 
-import com.revature.models.Card;
+import com.revature.models.*;
 import com.revature.repositories.CardRepo;
 import com.revature.services.CardService;
+import com.revature.services.CollectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,61 +15,39 @@ import java.util.Optional;
 public class CardController {
 
     public CardService cardService;
+    public CollectorService collectorService;
 
     public CardRepo cardRepo;
 
     @Autowired
-    public CardController(CardService cardService) {
+    public CardController(CardService cardService, CollectorService collectorService) {
+        this.collectorService = collectorService;
         this.cardService = cardService;
     }
 
     @PostMapping("card")
-    public ResponseEntity<?> createCard(@RequestBody Card card)
+    public ResponseEntity<Card> createCard(@RequestBody Card card)
     {
-        if(card.getNumber()!= null)
-        {
-            if(cardService.getCardById(card.getNumber())!=null)
-            {
-                return new ResponseEntity<>("Card already exists", HttpStatus.CONFLICT);
+        if (card.getCollectorId() != null) {
+            Collector collector = collectorService.findById(card.getCollectorId());
+            if (collector != null) {
+                card.setCollector(collector);
+            } else {
+                return ResponseEntity.badRequest().body(null); // Handle case where collectorId is invalid
             }
         }
 
-        if(card.getName() == null || card.getName().isEmpty())
-        {
+        Card createdCard = cardService.createCard(card);
 
-            return ResponseEntity.badRequest().body("Enter a card name");
-
-        }
-        else if(card.getHealth() < 0)
-        {
-            return ResponseEntity.badRequest().body("Enter a health greater than 0");
-        }
-        else
-
-        {
-
-            Card createdCard = cardService.createCard(card);
-
-        }
         return ResponseEntity.ok(card);
+
     }
 
     @GetMapping("card")
-    public ResponseEntity<List<Card>> getAllCards()
+    public List<Card> getAllCards()
     {
 
-
-        List<Card> cards = cardService.getAllCards();
-
-        if(cards.isEmpty())
-        {
-            return ResponseEntity.badRequest().build();
-        }
-        else
-        {
-            return ResponseEntity.ok(cards);
-        }
-
+        return cardService.getAllCards();
     }
 
     @GetMapping("card/{number}")
@@ -123,5 +102,13 @@ public class CardController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/card/collector/{collectorId}")
+    public ResponseEntity<List<Card>> getCardsByCollectorId(@PathVariable Integer collectorId) {
+        List<Card> cards = cardService.getCardsByCollectorId(collectorId);
+        if (cards.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(cards, HttpStatus.OK);
+    }
 
 }
