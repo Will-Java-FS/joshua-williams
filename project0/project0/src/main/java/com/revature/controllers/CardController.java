@@ -23,20 +23,52 @@ public class CardController {
     }
 
     @PostMapping("card")
-    public ResponseEntity<Card> createCard(@RequestBody Card card)
+    public ResponseEntity<?> createCard(@RequestBody Card card)
     {
+        if(card.getNumber()!= null)
+        {
+            if(cardService.getCardById(card.getNumber())!=null)
+            {
+                return new ResponseEntity<>("Card already exists", HttpStatus.CONFLICT);
+            }
+        }
 
-        Card createdCard = cardService.createCard(card);
+        if(card.getName() == null || card.getName().isEmpty())
+        {
 
+            return ResponseEntity.badRequest().body("Enter a card name");
+
+        }
+        else if(card.getHealth() < 0)
+        {
+            return ResponseEntity.badRequest().body("Enter a health greater than 0");
+        }
+        else
+
+        {
+
+            Card createdCard = cardService.createCard(card);
+
+        }
         return ResponseEntity.ok(card);
-
     }
 
     @GetMapping("card")
-    public List<Card> getAllCards()
+    public ResponseEntity<List<Card>> getAllCards()
     {
 
-        return cardService.getAllCards();
+
+        List<Card> cards = cardService.getAllCards();
+
+        if(cards.isEmpty())
+        {
+            return ResponseEntity.badRequest().build();
+        }
+        else
+        {
+            return ResponseEntity.ok(cards);
+        }
+
     }
 
     @GetMapping("card/{number}")
