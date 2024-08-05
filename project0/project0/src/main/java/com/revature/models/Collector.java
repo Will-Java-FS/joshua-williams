@@ -22,8 +22,7 @@ public class Collector {
     private String password;
 
     /*
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="card")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "collector", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Card> cardList;
      */

@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,6 +23,14 @@ public class Card
     @Column
     private Integer health;
 
+    @Column
+    private Integer collectorId;
+
+    @ManyToOne
+    @JoinColumn(name = "collector", referencedColumnName = "id")
+    @JsonBackReference
+    private Collector collector;
+
     public Card(){
 
     }
@@ -37,6 +46,36 @@ public class Card
         this.name = name;
         this.type = type;
         this.health = health;
+    }
+
+    public Card(Integer number, String name, String type, Integer health, Integer collectorId) {
+        this.number = number;
+        this.name = name;
+        this.type = type;
+        this.health = health;
+        this.collectorId = collectorId;
+    }
+
+    public Card(String name, String type, Integer health, Integer collectorId) {
+        this.name = name;
+        this.type = type;
+        this.health = health;
+        this.collectorId = collectorId;
+    }
+
+    public Card(String name, String type, Integer health, Collector collector) {
+        this.name = name;
+        this.type = type;
+        this.health = health;
+        this.collector = collector;
+    }
+
+    public Card(Integer number, String name, String type, Integer health, Collector collector) {
+        this.number = number;
+        this.name = name;
+        this.type = type;
+        this.health = health;
+        this.collector = collector;
     }
 
     public int getNumber() {

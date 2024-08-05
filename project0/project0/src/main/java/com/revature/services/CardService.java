@@ -66,11 +66,20 @@ public class CardService {
         return null;
 
     }
+    @Transactional
     public Optional<Card> deleteCard(int id) {
         Optional<Card> card = cardRepo.findById(id);
         if (card.isPresent()) {
             cardRepo.deleteById(id);
+            boolean exists = cardRepo.existsById(id);
+            if (exists) {
+                throw new RuntimeException("Failed to delete the card");
+            }
         }
         return card;
+    }
+
+    public List<Card> getCardsByCollectorId(Integer collectorId) {
+        return cardRepo.findByCollectorId(collectorId);
     }
 }
