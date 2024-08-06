@@ -92,22 +92,31 @@ public class CardController {
 
     }
 
-    // - As a user, I can delete a Item by its ID (HINT: Use Path Params to select a Item by its ID)
     @DeleteMapping("/card/{number}")
     public ResponseEntity<Optional<Card>> deleteCard(@PathVariable int number) {
+
         Optional<Card> card = cardService.deleteCard(number);
+
         if (card.isPresent()) {
+
             return new ResponseEntity<>(card, HttpStatus.OK);
+
         }
+
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/card/collector/{collectorId}")
     public ResponseEntity<List<Card>> getCardsByCollectorId(@PathVariable Integer collectorId) {
+
         List<Card> cards = cardService.getCardsByCollectorId(collectorId);
+
         if (cards.isEmpty()) {
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         }
+
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 

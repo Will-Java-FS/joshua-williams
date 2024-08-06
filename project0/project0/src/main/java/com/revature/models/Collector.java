@@ -21,12 +21,6 @@ public class Collector {
     @Column(nullable = false)
     private String password;
 
-    /*
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "collector", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Card> cardList;
-     */
-
     public Collector() {
 
     }
